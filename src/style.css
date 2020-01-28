@@ -1,0 +1,68 @@
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    width: 100%;
+    position: relative;
+    top: 0px;
+    background: #333;
+    color: white;
+}
+
+nav ul {
+    margin-bottom: 0;
+}
+
+
+nav li {
+    display: inline-block;
+    list-style-type: none;
+    margin: 0 1rem;
+    font-size: 1.25rem;
+}
+
+header h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 1rem 0;
+}
+
+header a {
+    color: #eee;
+    text-decoration: none;
+}
+
+header a:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+#marketing-images-container {
+    width: 85%;
+    margin: 2rem auto;
+    display: flex;
+    justify-content: space-between;
+}
+
+.marketing-image {
+    padding: 20px;
+    margin: 20px;
+    /* border: 1px solid #eee; */
+}
+
+.marketing-image:hover {
+    border-bottom: 5px solid red;
+    padding-bottom: 15px;
+}
+
+.marketing-image img {
+    height: 100%;
+    width: 100%;
+}
+
+#marketing-message-container {
+    text-align: center;
+    font-size: 1.5rem;
+    color: #666;
+}
