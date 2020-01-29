@@ -74,7 +74,8 @@ th, td {
     width: 100%;
 }
 
-#place-order {
-    display: block;
-    margin: 0 auto;
+#chart-container {
+    width: 400px;
+    height: 400px;
+    margin: 2rem auto;
 }

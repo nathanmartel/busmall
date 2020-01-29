@@ -1,3 +1,4 @@
+import { drawChart } from './myChart.js';
 import { 
     getProducts, 
     getResults,
@@ -91,3 +92,4 @@ export function renderResults() {
 // Run on load
 saveSessionToAllTimeResults();
 renderResults();
+drawChart();
