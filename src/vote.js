@@ -1,6 +1,7 @@
 import productsSeed from '../data/products.js';
 const productsKey = 'products';
-const resultsKey = 'marketingResults';
+const resultsKey = 'sessionResults';
+const allTimeResultsKey = 'allTimeResults';
 
 
 export function initializeAdminButtons() {
@@ -24,9 +25,24 @@ export function initializeAdminButtons() {
     });
 }
 
+export function saveSessionToAllTimeResults() {
+    const previousSessionResults = getResults();
+    let allTimeResultsString = localStorage.getItem(allTimeResultsKey);
+    let allTimeResults;
+    if (!allTimeResultsString) {
+        allTimeResults = [];
+    } else { 
+        allTimeResults = JSON.parse(allTimeResultsString); 
+    }
+    allTimeResults.push(previousSessionResults);
+    const newAllTimeResultsString = JSON.stringify(allTimeResults);
+    localStorage.setItem(allTimeResultsKey, newAllTimeResultsString);
+}
+
 export function initializeStorage() {
     getProducts();
-    getResults();
+    saveSessionToAllTimeResults();
+    localStorage.setItem(resultsKey, '[]');
 }
 
 export function initializeListenToProducts() {
@@ -35,8 +51,6 @@ export function initializeListenToProducts() {
         e.preventDefault();
         const formData = new FormData(productsForm);
         const selectedId = formData.get('marketing-image');
-        console.log('formData is: ', formData);
-        console.log('marketing-image is: ', selectedId);
         const allProducts = getProducts();
         const selectedProduct = findById(selectedId, allProducts);
         const message = document.getElementById('marketing-message');
@@ -68,6 +82,19 @@ export function getProducts() {
     return myProducts;
 }
 
+
+export function getAllTimeResults() {
+    const myResults = localStorage.getItem(allTimeResultsKey);
+    if (!myResults) {
+        const myEmptyResults = [];
+        return myEmptyResults;
+    } else {
+        const myExistingResults = JSON.parse(myResults);
+        return myExistingResults;
+    }
+}
+
+
 export function getResults() {
     const myResults = localStorage.getItem(resultsKey);
     if (!myResults) {
@@ -96,19 +123,34 @@ function renderRandomImage(imageDiv, index, marketingProducts) {
 function addVote(selectedId) {
     const allResults = getResults();
     const selectedProduct = findById(selectedId, allResults);
+    // addView is called before addVote, so product must have been already initialized in results
     if (selectedProduct) {
-        selectedProduct.votes++;
+        if (selectedProduct.votes) selectedProduct.votes++;
+        else selectedProduct.votes = 1;
+        saveResults(allResults);
+    } else {
+        alert('Something is terribly wrong');
+    }
+}
+
+function addView(selectedId) {
+    const allResults = getResults();
+    const selectedProduct = findById(selectedId, allResults);
+    if (selectedProduct) {
+        selectedProduct.views++;
         saveResults(allResults);
     } else {
         const newProductInResults = {
             id : selectedId,
-            votes : 1,
+            votes : 0,
+            views : 1,
         };
         allResults.push(newProductInResults);
         saveResults(allResults);
     }
-    console.log('allResults is: ', allResults);
 }
+
+
 
 export function renderNewImages() {
     const imageOne = document.getElementById('marketing-image-1-container');
@@ -118,9 +160,10 @@ export function renderNewImages() {
 
     const allProducts = getProducts();
     const totalProducts = allProducts.length;
-    let randomIndexSet = [0, 0, 0];
+    let randomIndexSet = [];
+    const numberOfProducts = imageSet.length;
     let randomNumber = Math.floor(Math.random() * totalProducts);
-    for (let i = 0; i < randomIndexSet.length; i++) {
+    for (let i = 0; i < numberOfProducts; i++) {
         if (i > 0) {
             do { randomNumber = Math.floor(Math.random() * totalProducts); 
             }
@@ -129,8 +172,11 @@ export function renderNewImages() {
         randomIndexSet[i] = randomNumber;
     }
 
-    for (let i = 0; i < randomIndexSet.length; i++) {
-        renderRandomImage(imageSet[i], randomIndexSet[i], allProducts);
-    }
-
+    const allResults = getResults();
+    imageSet.forEach( (thisImageDiv, i) => { 
+        renderRandomImage(thisImageDiv, randomIndexSet[i], allProducts);
+        const myProductIndex = randomIndexSet[i];
+        const myProductId = allProducts[myProductIndex].id;
+        addView(myProductId);
+    });
 }
