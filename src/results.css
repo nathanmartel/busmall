@@ -22,6 +22,10 @@ thead th {
     text-align: left;
 }
 
+tbody tr {
+    height: 80px;
+}
+
 tbody tr:nth-child(odd) {
     background-color: #e6e6e6;
 }
@@ -29,6 +33,24 @@ tbody tr:nth-child(odd) {
 tbody tr:nth-child(even) {
     background-color: #f6f6f6;
 }
+
+tbody tr td:first-child {
+    background-color: white;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+
+tbody img {
+    max-width: 60px;
+}
+
+tbody figure {
+    margin: 0;
+}
+tbody figcaption {
+    display: none;
+}
+
 
 tfoot {
     background-color: white;
@@ -52,7 +74,8 @@ th, td {
     width: 100%;
 }
 
-#place-order {
-    display: block;
-    margin: 0 auto;
+#chart-container {
+    width: 400px;
+    height: 400px;
+    margin: 2rem auto;
 }

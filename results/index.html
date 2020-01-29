@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
     <link rel="stylesheet" href="../src/bootstrap-reboot.min.css">
     <link rel="stylesheet" href="../src/style.css">
     <link rel="stylesheet" href="../src/results.css">
@@ -16,20 +17,25 @@
         <h1><a href="/">BusMall</a></h1>
         <nav>
             <ul>
-                <li><a href="/">Focus Group</a></li>
+                <li><a href="/">Vote</a></li>
                 <li><a href="/results">Results</a></li>
             </ul>
         </nav>
     </header>
     <main>
+        <div id="chart-container">
+            <canvas id="myChart" width="400" height="400"></canvas>
+        </div>
         <div id="results-container">
             <table id="results">
                 <thead>
                     <tr>
-                        <th class="left full-width">Item</th>
                         <th>Image</th>
-                        <th>Session</th>
-                        <th>Totals</th>
+                        <th>name</th>
+                        <th>Session Votes</th>
+                        <th>Session Views</th>
+                        <th>All-time Votes</th>
+                        <th>All-time Views</th>
                     </tr>
                 </thead>
                 <tbody id="results-body">
@@ -38,6 +44,10 @@
         </div>
     </main>
     <script type="module" src="../src/results.js"></script>
+
+    <script>
+    </script>
+        
 </body>
 
 </html>
