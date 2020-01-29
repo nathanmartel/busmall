@@ -1,4 +1,4 @@
-const productListJS = [
+export default [
     {
         id: 'bag',
         name: 'R2D2 Luggage',
@@ -100,5 +100,3 @@ const productListJS = [
         image: '../assets/wine-glass.jpg',
     },
 ];
-
-export default productListJS;
