@@ -204,8 +204,7 @@ export function renderNewImages() {
         randomIndexSet[i] = randomNumber;
     }
 
-    const allResults = getResults();
-    imageSet.forEach( (thisImageDiv, i) => { 
+    imageSet.forEach((thisImageDiv, i) => { 
         renderRandomImage(thisImageDiv, randomIndexSet[i], allProducts);
         const myProductIndex = randomIndexSet[i];
         const myProductId = allProducts[myProductIndex].id;

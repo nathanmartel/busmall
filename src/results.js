@@ -4,7 +4,6 @@ import {
     getResults,
     getAllTimeResults,
     findById, 
-    saveSessionToAllTimeResults 
 } from './vote.js';
 
 function getAllTimeResult(productId) {
