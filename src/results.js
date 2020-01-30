@@ -4,7 +4,6 @@ import {
     getResults,
     getAllTimeResults,
     findById, 
-    initializeStorage,
     saveSessionToAllTimeResults 
 } from './vote.js';
 
@@ -15,19 +14,17 @@ function getAllTimeResult(productId) {
         votes : 0,
         views: 0,
     };
-    allTimeResults.forEach((resultArray) => {
-        resultArray.forEach((result) => {
-            if (result.id === productId) {
-                if (result.votes) {
-                    productAllTimeResult.votes += result.votes;
-                    console.log(`Adding ${result.votes} votes`);
-                }
-                if (result.views) {
-                    productAllTimeResult.views += result.views;
-                    console.log(`Adding ${result.views} views`);
-                }
+    allTimeResults.forEach((result) => {
+        if (result.id === productId) {
+            if (result.votes) {
+                productAllTimeResult.votes += result.votes;
+                console.log(`Adding ${result.votes} votes`);
             }
-        });
+            if (result.views) {
+                productAllTimeResult.views += result.views;
+                console.log(`Adding ${result.views} views`);
+            }
+        }
     });
     return productAllTimeResult;
 }
@@ -90,6 +87,5 @@ export function renderResults() {
 }
 
 // Run on load
-saveSessionToAllTimeResults();
 renderResults();
 drawChart();
