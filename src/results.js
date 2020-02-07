@@ -4,8 +4,6 @@ import {
     getResults,
     getAllTimeResults,
     findById, 
-    initializeStorage,
-    saveSessionToAllTimeResults 
 } from './vote.js';
 
 function getAllTimeResult(productId) {
@@ -15,19 +13,17 @@ function getAllTimeResult(productId) {
         votes : 0,
         views: 0,
     };
-    allTimeResults.forEach((resultArray) => {
-        resultArray.forEach((result) => {
-            if (result.id === productId) {
-                if (result.votes) {
-                    productAllTimeResult.votes += result.votes;
-                    console.log(`Adding ${result.votes} votes`);
-                }
-                if (result.views) {
-                    productAllTimeResult.views += result.views;
-                    console.log(`Adding ${result.views} views`);
-                }
+    allTimeResults.forEach((result) => {
+        if (result.id === productId) {
+            if (result.votes) {
+                productAllTimeResult.votes += result.votes;
+                console.log(`Adding ${result.votes} votes`);
             }
-        });
+            if (result.views) {
+                productAllTimeResult.views += result.views;
+                console.log(`Adding ${result.views} views`);
+            }
+        }
     });
     return productAllTimeResult;
 }
@@ -40,7 +36,7 @@ function renderLineItem(result, allTimeResult, allProducts) {
     const imageTdFigure = document.createElement('figure');
     const imageTdFigureImg = document.createElement('img');
     const imageTdFigcaption = document.createElement('figcaption');
-    imageTdFigureImg.src = matchingProduct.image;
+    imageTdFigureImg.src = `../assets/${matchingProduct.image}`;
     imageTdFigureImg.alt = `${matchingProduct.name} photo`;
     imageTdFigcaption.textContent = matchingProduct.name;
     imageTdFigure.appendChild(imageTdFigureImg);
@@ -90,6 +86,5 @@ export function renderResults() {
 }
 
 // Run on load
-saveSessionToAllTimeResults();
 renderResults();
 drawChart();

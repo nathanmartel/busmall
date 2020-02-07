@@ -1,54 +1,52 @@
 import { getResults } from './vote.js';
 
+function getFlatResults(allResults) {
+    const flatResults = { id : [], votes : [], views : [] };
+    allResults.forEach((result) => {
+        flatResults.id.push(result.id);
+        flatResults.votes.push(result.votes);
+        flatResults.views.push(result.views);
+    });
+    return flatResults;    
+}
+
 export function drawChart() {
     var ctx = document.getElementById('myChart');
-
-    let onlyResults = [];
-    // allResults = getResults();
-    // allResults.forEach((result) => {
-    //     if (result.votes) {
-    //             productAllTimeResult.votes += result.votes;
-    //             console.log(`Adding ${result.votes} votes`);
-    //         }
-    //     }
-    // });
-
-
+    const allResults = getResults();
+    // Restructure results to arrays for Chart.js display
+    const flatResults = getFlatResults(allResults);
+    console.log(flatResults);
 
     var myChart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+            labels: flatResults.id,
             datasets: [{
                 label: '# of Votes',
-                data: [12, 19, 3, 5, 2, 3],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
-                ],
-                borderWidth: 1
+                data: flatResults.votes,
+                backgroundColor: 'rgba(217,83,79,0.65)',
+                categoryPercentage: .6,
+            }, {
+                label: '# of Views',
+                data: flatResults.views,
+                backgroundColor: 'rgba(92,184,92,0.65)',
+                categoryPercentage: .6,
             }]
         },
         options: {
             scales: {
+                xAxes: [{
+                    stacked: false,
+                }],
                 yAxes: [{
-                    ticks: {
-                        beginAtZero: true
-                    }
-                }]
+                    stacked: false,
+                    ticks: { beginAtZero: true }
+                }, {
+                    stacked: false,
+                    ticks: { display: false }
+                }],
             }
         }
-    });
+    }
+    );
 }

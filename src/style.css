@@ -90,3 +90,7 @@ main {
     font-size: .7rem;
     margin-bottom: 1rem;
 }
+
+.hidden {
+    display: none;
+}

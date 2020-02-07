@@ -27,11 +27,11 @@ export function initializeAdminButtons() {
 
 export function saveSessionToAllTimeResults() {
     const previousSessionResults = getResults();
-    let allTimeResultsString = localStorage.getItem(allTimeResultsKey);
     let allTimeResults;
-    if (!allTimeResultsString) {
+    if (!localStorage.getItem(allTimeResultsKey)) {
         allTimeResults = [];
-    } else { 
+    } else {
+        const allTimeResultsString = localStorage.getItem(allTimeResultsKey);
         allTimeResults = JSON.parse(allTimeResultsString); 
     }
     allTimeResults.push(previousSessionResults);
@@ -41,7 +41,9 @@ export function saveSessionToAllTimeResults() {
 
 export function initializeStorage() {
     getProducts();
-    saveSessionToAllTimeResults();
+    if (!localStorage.getItem(allTimeResultsKey)) {
+        localStorage.setItem(allTimeResultsKey, '[]');        
+    }
     localStorage.setItem(resultsKey, '[]');
 }
 
@@ -53,6 +55,10 @@ export function initializeListenToProducts() {
         const selectedId = formData.get('marketing-image');
         const allProducts = getProducts();
         const selectedProduct = findById(selectedId, allProducts);
+        const messageContainer = document.getElementById('marketing-message-container');
+        if (messageContainer.classList.contains('hidden')) { 
+            messageContainer.classList.remove('hidden'); 
+        }
         const message = document.getElementById('marketing-message');
         message.textContent = selectedProduct.name;
 
@@ -107,17 +113,33 @@ export function getResults() {
 }
 
 
-function saveResults(results) {
-    const resultsString = JSON.stringify(results);
+function saveResults(allResults) {
+    const resultsString = JSON.stringify(allResults);
     localStorage.setItem(resultsKey, resultsString);
 }
+
+function saveAllTimeResults(allResults) {
+    const resultsString = JSON.stringify(allResults);
+    console.log('saving alltime: ', resultsString);
+    localStorage.setItem(allTimeResultsKey, resultsString);
+}
+
 
 function renderRandomImage(imageDiv, index, marketingProducts) {
     const myImage = imageDiv.querySelector('img');
     const myInput = imageDiv.querySelector('input');
-    myImage.src = marketingProducts[index].image;
+    myImage.src = `./assets/${marketingProducts[index].image}`;
     myImage.alt = marketingProducts[index].name;
     myInput.value = marketingProducts[index].id;
+}
+
+function countVotes() {
+    let numberOfVotes = 0;
+    const allResults = getResults();
+    allResults.forEach(item => {
+        numberOfVotes += item.votes;
+    });
+    return numberOfVotes;
 }
 
 function addVote(selectedId) {
@@ -128,10 +150,22 @@ function addVote(selectedId) {
         if (selectedProduct.votes) selectedProduct.votes++;
         else selectedProduct.votes = 1;
         saveResults(allResults);
-    } else {
-        alert('Something is terribly wrong');
     }
+
+    const allTimeResults = getAllTimeResults();
+    const selectedAllTimeProduct = findById(selectedId, allTimeResults);
+    if (selectedAllTimeProduct) {
+        if (selectedAllTimeProduct.votes) selectedAllTimeProduct.votes++;
+        else selectedAllTimeProduct.votes = 1;
+        saveAllTimeResults(allTimeResults);
+    }
+
+    // Check if 25 votes have been castand redirect if so
+    const numberOfVotes = countVotes();
+    if (numberOfVotes >= 25) { window.location = './results'; }
+
 }
+
 
 function addView(selectedId) {
     const allResults = getResults();
@@ -148,6 +182,22 @@ function addView(selectedId) {
         allResults.push(newProductInResults);
         saveResults(allResults);
     }
+
+    const allTimeResults = getAllTimeResults();
+    const selectedAllTimeProduct = findById(selectedId, allTimeResults);
+    if (selectedAllTimeProduct) {
+        selectedAllTimeProduct.views++;
+        saveAllTimeResults(allTimeResults);
+    } else {
+        const newProductInResults = {
+            id : selectedId,
+            votes : 0,
+            views : 1,
+        };
+        allTimeResults.push(newProductInResults);
+        saveAllTimeResults(allTimeResults);
+    }
+
 }
 
 
@@ -172,8 +222,7 @@ export function renderNewImages() {
         randomIndexSet[i] = randomNumber;
     }
 
-    const allResults = getResults();
-    imageSet.forEach( (thisImageDiv, i) => { 
+    imageSet.forEach((thisImageDiv, i) => { 
         renderRandomImage(thisImageDiv, randomIndexSet[i], allProducts);
         const myProductIndex = randomIndexSet[i];
         const myProductId = allProducts[myProductIndex].id;
