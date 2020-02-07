@@ -55,6 +55,10 @@ export function initializeListenToProducts() {
         const selectedId = formData.get('marketing-image');
         const allProducts = getProducts();
         const selectedProduct = findById(selectedId, allProducts);
+        const messageContainer = document.getElementById('marketing-message-container');
+        if (messageContainer.classList.contains('hidden')) { 
+            messageContainer.classList.remove('hidden'); 
+        }
         const message = document.getElementById('marketing-message');
         message.textContent = selectedProduct.name;
 
@@ -124,9 +128,18 @@ function saveAllTimeResults(allResults) {
 function renderRandomImage(imageDiv, index, marketingProducts) {
     const myImage = imageDiv.querySelector('img');
     const myInput = imageDiv.querySelector('input');
-    myImage.src = marketingProducts[index].image;
+    myImage.src = `./assets/${marketingProducts[index].image}`;
     myImage.alt = marketingProducts[index].name;
     myInput.value = marketingProducts[index].id;
+}
+
+function countVotes() {
+    let numberOfVotes = 0;
+    const allResults = getResults();
+    allResults.forEach(item => {
+        numberOfVotes += item.votes;
+    });
+    return numberOfVotes;
 }
 
 function addVote(selectedId) {
@@ -146,6 +159,11 @@ function addVote(selectedId) {
         else selectedAllTimeProduct.votes = 1;
         saveAllTimeResults(allTimeResults);
     }
+
+    // Check if 25 votes have been castand redirect if so
+    const numberOfVotes = countVotes();
+    if (numberOfVotes >= 25) { window.location = './results'; }
+
 }
 
 

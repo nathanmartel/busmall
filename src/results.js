@@ -36,7 +36,7 @@ function renderLineItem(result, allTimeResult, allProducts) {
     const imageTdFigure = document.createElement('figure');
     const imageTdFigureImg = document.createElement('img');
     const imageTdFigcaption = document.createElement('figcaption');
-    imageTdFigureImg.src = matchingProduct.image;
+    imageTdFigureImg.src = `../assets/${matchingProduct.image}`;
     imageTdFigureImg.alt = `${matchingProduct.name} photo`;
     imageTdFigcaption.textContent = matchingProduct.name;
     imageTdFigure.appendChild(imageTdFigureImg);
